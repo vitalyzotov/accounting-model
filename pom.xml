@@ -72,6 +72,7 @@
         <loan.model.version>1.0</loan.model.version>
         <banking.model.version>1.52</banking.model.version>
         <calendar.model.version>1.53</calendar.model.version>
+        <cashreceipt.model.version>1.51</cashreceipt.model.version>
     </properties>
 
     <dependencies>
@@ -112,6 +113,12 @@
             <groupId>ru.vzotov</groupId>
             <artifactId>calendar-model</artifactId>
             <version>${calendar.model.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ru.vzotov</groupId>
+            <artifactId>cashreceipt-model</artifactId>
+            <version>${cashreceipt.model.version}</version>
         </dependency>
 
         <dependency>
