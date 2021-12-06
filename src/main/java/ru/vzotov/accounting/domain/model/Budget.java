@@ -240,7 +240,7 @@ public class Budget implements Entity<Budget> {
             final Map<AccountNumber, List<BankRecord<?>>> weekOperations = knownOperations.stream()
                     .filter(op -> !(op.recorded().isAfter(weekEnd) || op.recorded().isBefore(weekStart)))
                     .collect(Collectors.groupingBy(
-                            op -> op.account().accountNumber(),
+                            BankRecord::account,
                             Collectors.toList()
                     ));
             weekOperations.forEach((k, v) -> {

@@ -37,7 +37,6 @@ public class BudgetTest {
         LocalDate start = LocalDate.of(2020, Month.JANUARY, 1);
         LocalDate finish = LocalDate.of(2020, Month.MARCH, 31);
         AccountNumber number = new AccountNumber("40817810108290012345");
-        Account account = new Account(number, "def", PersonId.nextId());
 
         recurrence = new Recurrence(start, finish, RecurrenceUnit.MONTHLY, 1, 7);
         assertThat(recurrence.toString()).isEqualTo("M2020-01-01(1)[7]2020-03-31");
@@ -119,7 +118,7 @@ public class BudgetTest {
                 LocalDate.of(2020, Month.MARCH, 2),
                 Money.rubles(10d),
                 OperationType.WITHDRAW,
-                account,
+                number,
                 "test operation 1"
         ));
 
