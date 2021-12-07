@@ -183,6 +183,14 @@ public class Deal implements Entity<Deal> {
         this.description = description;
     }
 
+    public void join(Deal other) {
+        Validate.notNull(other);
+        other.receipts.forEach(receipt -> other.moveReceipt(receipt, this));
+        other.operations.forEach(operation -> other.moveOperation(operation, this));
+        other.purchases.forEach(purchase -> other.movePurchase(purchase, this));
+        setAmount(this.amount.add(other.amount));
+    }
+
     @Override
     public boolean sameIdentityAs(Deal that) {
         return that != null && Objects.equals(dealId, that.dealId);
