@@ -3,6 +3,7 @@ package ru.vzotov.accounting.domain.model;
 import org.apache.commons.lang.Validate;
 import ru.vzotov.banking.domain.model.BudgetCategory;
 import ru.vzotov.banking.domain.model.BudgetCategoryId;
+import ru.vzotov.banking.domain.model.Operation;
 import ru.vzotov.banking.domain.model.OperationId;
 import ru.vzotov.cashreceipt.domain.model.CheckId;
 import ru.vzotov.ddd.shared.AggregateRoot;
@@ -134,7 +135,7 @@ public class Deal implements Entity<Deal> {
     }
 
     public List<PurchaseId> purchases() {
-        return purchases;
+        return Collections.unmodifiableList(purchases);
     }
 
     public Set<CheckId> receipts() {
@@ -161,14 +162,26 @@ public class Deal implements Entity<Deal> {
         this.operations.addAll(operations);
     }
 
+    public void addOperation(OperationId operation) {
+        this.operations.add(operation);
+    }
+
     public void setReceipts(Set<CheckId> receipts) {
         this.receipts.retainAll(receipts);
         this.receipts.addAll(receipts);
     }
 
+    public void addReceipt(CheckId receipt) {
+        this.receipts.add(receipt);
+    }
+
     public void setPurchases(List<PurchaseId> purchases) {
         this.purchases.clear();
         this.purchases.addAll(purchases);
+    }
+
+    public void addPurchase(PurchaseId purchase) {
+        this.purchases.add(purchase);
     }
 
     public void assignCategory(BudgetCategoryId category) {
