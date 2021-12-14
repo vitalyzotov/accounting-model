@@ -198,10 +198,15 @@ public class Deal implements Entity<Deal> {
 
     public void join(Deal other) {
         Validate.notNull(other);
-        other.receipts.forEach(receipt -> other.moveReceipt(receipt, this));
-        other.operations.forEach(operation -> other.moveOperation(operation, this));
-        other.purchases.forEach(purchase -> other.movePurchase(purchase, this));
-        setAmount(this.amount.add(other.amount));
+
+        this.receipts.addAll(other.receipts);
+        other.receipts.clear();
+
+        this.operations.addAll(other.operations);
+        other.operations.clear();
+
+        this.purchases.addAll(other.purchases);
+        other.purchases.clear();
     }
 
     @Override
