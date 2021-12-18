@@ -184,6 +184,10 @@ public class Deal implements Entity<Deal> {
         this.purchases.add(purchase);
     }
 
+    public void removePurchase(PurchaseId purchase) {
+        this.purchases.remove(purchase);
+    }
+
     public void assignCategory(BudgetCategoryId category) {
         this.category = category;
     }
