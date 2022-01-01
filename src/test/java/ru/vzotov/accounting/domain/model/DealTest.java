@@ -29,6 +29,7 @@ public class DealTest {
                 BudgetCategoryId.of("my category"),
                 Collections.emptySet(),
                 Collections.emptySet(),
+                Collections.emptySet(),
                 Collections.emptyList()
         );
 
@@ -40,7 +41,7 @@ public class DealTest {
                 null,
                 LocalDate.now(), Money.kopecks(100),
                 "Deal description", "Deal comment", BudgetCategoryId.of("my category"),
-                Collections.emptySet(), Collections.emptySet(), Collections.emptyList()
+                Collections.emptySet(), Collections.emptySet(), Collections.emptySet(), Collections.emptyList()
         )).isInstanceOf(Throwable.class);
     }
 
@@ -67,6 +68,7 @@ public class DealTest {
                 category1,
                 Collections.singleton(receipt1),
                 Collections.singleton(operation1),
+                Collections.emptySet(),
                 Collections.singletonList(purchase1)
         );
 
@@ -79,6 +81,7 @@ public class DealTest {
                 category2,
                 Collections.singleton(receipt2),
                 Collections.singleton(operation2),
+                Collections.emptySet(),
                 Collections.singletonList(purchase2)
         );
 

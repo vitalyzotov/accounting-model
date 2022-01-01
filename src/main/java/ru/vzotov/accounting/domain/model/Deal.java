@@ -64,26 +64,32 @@ public class Deal implements Entity<Deal> {
     private Set<OperationId> operations;
 
     /**
+     * Операции по картам, связанные со сделкой
+     */
+    private Set<OperationId> cardOperations;
+
+    /**
      * Все покупки, относящиеся к сделке
      */
     private List<PurchaseId> purchases;
 
     public Deal(DealId dealId, LocalDate date, Money amount) {
-        this(dealId, date, amount, null, null, null, emptySet(), emptySet(), emptyList());
+        this(dealId, date, amount, null, null, null, emptySet(), emptySet(), emptySet(), emptyList());
     }
 
     public Deal(DealId dealId, LocalDate date, Money amount, String description, String comment, BudgetCategoryId category) {
-        this(dealId, date, amount, description, comment, category, emptySet(), emptySet(), emptyList());
+        this(dealId, date, amount, description, comment, category, emptySet(), emptySet(), emptySet(), emptyList());
     }
 
     public Deal(DealId dealId, LocalDate date, Money amount,
                 String description, String comment, BudgetCategoryId category,
-                Set<CheckId> receipts, Set<OperationId> operations, List<PurchaseId> purchases) {
+                Set<CheckId> receipts, Set<OperationId> operations, Set<OperationId> cardOperations, List<PurchaseId> purchases) {
         Validate.notNull(dealId);
         Validate.notNull(date);
         Validate.notNull(amount);
         Validate.notNull(receipts);
         Validate.notNull(operations);
+        Validate.notNull(cardOperations);
         Validate.notNull(purchases);
 
         this.dealId = dealId;
@@ -95,6 +101,7 @@ public class Deal implements Entity<Deal> {
 
         this.receipts = new HashSet<>(receipts);
         this.operations = new HashSet<>(operations);
+        this.cardOperations = new HashSet<>(cardOperations);
         this.purchases = new ArrayList<>(purchases);
     }
 
@@ -132,6 +139,10 @@ public class Deal implements Entity<Deal> {
 
     public Set<OperationId> operations() {
         return Collections.unmodifiableSet(operations);
+    }
+
+    public Set<OperationId> cardOperations() {
+        return Collections.unmodifiableSet(cardOperations);
     }
 
     public List<PurchaseId> purchases() {
