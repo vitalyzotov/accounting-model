@@ -5,7 +5,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import ru.vzotov.banking.domain.model.BudgetCategoryId;
 import ru.vzotov.banking.domain.model.OperationId;
-import ru.vzotov.cashreceipt.domain.model.CheckId;
+import ru.vzotov.cashreceipt.domain.model.ReceiptId;
 import ru.vzotov.domain.model.Money;
 import ru.vzotov.purchase.domain.model.PurchaseId;
 
@@ -50,8 +50,8 @@ public class DealTest {
         BudgetCategoryId category1 = BudgetCategoryId.of("cat1");
         BudgetCategoryId category2 = BudgetCategoryId.of("cat2");
 
-        CheckId receipt1 = new CheckId("receipt1");
-        CheckId receipt2 = new CheckId("receipt2");
+        ReceiptId receipt1 = new ReceiptId("receipt1");
+        ReceiptId receipt2 = new ReceiptId("receipt2");
 
         OperationId operation1 = new OperationId("op1");
         OperationId operation2 = new OperationId("op2");

@@ -1,11 +1,9 @@
 package ru.vzotov.accounting.domain.model;
 
 import org.apache.commons.lang.Validate;
-import ru.vzotov.banking.domain.model.BudgetCategory;
 import ru.vzotov.banking.domain.model.BudgetCategoryId;
-import ru.vzotov.banking.domain.model.Operation;
 import ru.vzotov.banking.domain.model.OperationId;
-import ru.vzotov.cashreceipt.domain.model.CheckId;
+import ru.vzotov.cashreceipt.domain.model.ReceiptId;
 import ru.vzotov.ddd.shared.AggregateRoot;
 import ru.vzotov.ddd.shared.Entity;
 import ru.vzotov.domain.model.Money;
@@ -56,7 +54,7 @@ public class Deal implements Entity<Deal> {
     /**
      * Все чеки сделки
      */
-    private Set<CheckId> receipts;
+    private Set<ReceiptId> receipts;
 
     /**
      * Все операции сделки
@@ -83,7 +81,7 @@ public class Deal implements Entity<Deal> {
 
     public Deal(DealId dealId, LocalDate date, Money amount,
                 String description, String comment, BudgetCategoryId category,
-                Set<CheckId> receipts, Set<OperationId> operations, Set<OperationId> cardOperations, List<PurchaseId> purchases) {
+                Set<ReceiptId> receipts, Set<OperationId> operations, Set<OperationId> cardOperations, List<PurchaseId> purchases) {
         Validate.notNull(dealId);
         Validate.notNull(date);
         Validate.notNull(amount);
@@ -149,11 +147,11 @@ public class Deal implements Entity<Deal> {
         return Collections.unmodifiableList(purchases);
     }
 
-    public Set<CheckId> receipts() {
+    public Set<ReceiptId> receipts() {
         return Collections.unmodifiableSet(receipts);
     }
 
-    public void moveReceipt(CheckId receipt, Deal target) {
+    public void moveReceipt(ReceiptId receipt, Deal target) {
         this.receipts.remove(receipt);
         target.receipts.add(receipt);
     }
@@ -177,12 +175,12 @@ public class Deal implements Entity<Deal> {
         this.operations.add(operation);
     }
 
-    public void setReceipts(Set<CheckId> receipts) {
+    public void setReceipts(Set<ReceiptId> receipts) {
         this.receipts.retainAll(receipts);
         this.receipts.addAll(receipts);
     }
 
-    public void addReceipt(CheckId receipt) {
+    public void addReceipt(ReceiptId receipt) {
         this.receipts.add(receipt);
     }
 
@@ -240,6 +238,17 @@ public class Deal implements Entity<Deal> {
     @Override
     public int hashCode() {
         return Objects.hash(dealId);
+    }
+
+    @Override
+    public String toString() {
+        return "Deal{" +
+                "id=" + id +
+                ", dealId=" + dealId +
+                ", date=" + date +
+                ", amount=" + amount +
+                ", description='" + description + '\'' +
+                '}';
     }
 
     protected Deal() {
