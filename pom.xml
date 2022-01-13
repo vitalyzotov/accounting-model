@@ -6,7 +6,7 @@
 
     <groupId>ru.vzotov</groupId>
     <artifactId>accounting-model</artifactId>
-    <version>1.6-SNAPSHOT</version>
+    <version>1.6</version>
     <name>[Model] Accounting</name>
 
     <properties>
