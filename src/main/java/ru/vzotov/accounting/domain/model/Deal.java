@@ -3,6 +3,7 @@ package ru.vzotov.accounting.domain.model;
 import org.apache.commons.lang.Validate;
 import ru.vzotov.banking.domain.model.BudgetCategoryId;
 import ru.vzotov.banking.domain.model.OperationId;
+import ru.vzotov.person.domain.model.PersonId;
 import ru.vzotov.cashreceipt.domain.model.ReceiptId;
 import ru.vzotov.ddd.shared.AggregateRoot;
 import ru.vzotov.ddd.shared.Entity;
@@ -21,10 +22,10 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
 
 /**
- * <p>Модель сделки.</p>
+ * <p>Deal model.</p>
  * <p>
- * Сделка - финансово значимое действие, которое сопровождается одной или несколькими финансовыми операциями
- * и может подтверждаться одним или несколькими чеками.
+ *     A deal is a financially significant action that is accompanied by one or more financial operations
+ *     and can be confirmed by one or more cash receipts.
  * </p>
  */
 @AggregateRoot
@@ -33,56 +34,68 @@ public class Deal implements Entity<Deal> {
     private DealId dealId;
 
     /**
-     * Дата сделки. В простейшем случае определяется минимальной датой финансовой операции, относящейся к сделке.
+     * Date of the deal. Usually this is the earliest date of operations that belong to the deal.
      */
     private LocalDate date;
 
     /**
-     * Финансовый результат сделки
+     * Financial result of the deal
      */
     private Money amount;
 
     /**
-     * Категория бюджета
+     * Budget category
      */
     private BudgetCategoryId category;
 
+    /**
+     * Description of the deal
+     */
     private String description;
 
+    /**
+     * Comment to the deal
+     */
     private String comment;
 
     /**
-     * Все чеки сделки
+     * Cash receipts
      */
     private Set<ReceiptId> receipts;
 
     /**
-     * Все операции сделки
+     * Operations that belong to the deal
      */
     private Set<OperationId> operations;
 
     /**
-     * Операции по картам, связанные со сделкой
+     * Card operations
      */
     private Set<OperationId> cardOperations;
 
     /**
-     * Все покупки, относящиеся к сделке
+     * Purchases that belong to the deal
      */
     private List<PurchaseId> purchases;
 
-    public Deal(DealId dealId, LocalDate date, Money amount) {
-        this(dealId, date, amount, null, null, null, emptySet(), emptySet(), emptySet(), emptyList());
+    /**
+     * Owner of the deal
+     */
+    private PersonId owner;
+
+    public Deal(DealId dealId, PersonId owner, LocalDate date, Money amount) {
+        this(dealId, owner, date, amount, null, null, null, emptySet(), emptySet(), emptySet(), emptyList());
     }
 
-    public Deal(DealId dealId, LocalDate date, Money amount, String description, String comment, BudgetCategoryId category) {
-        this(dealId, date, amount, description, comment, category, emptySet(), emptySet(), emptySet(), emptyList());
+    public Deal(DealId dealId, PersonId owner, LocalDate date, Money amount, String description, String comment, BudgetCategoryId category) {
+        this(dealId, owner, date, amount, description, comment, category, emptySet(), emptySet(), emptySet(), emptyList());
     }
 
-    public Deal(DealId dealId, LocalDate date, Money amount,
+    public Deal(DealId dealId, PersonId owner, LocalDate date, Money amount,
                 String description, String comment, BudgetCategoryId category,
                 Set<ReceiptId> receipts, Set<OperationId> operations, Set<OperationId> cardOperations, List<PurchaseId> purchases) {
         Validate.notNull(dealId);
+        Validate.notNull(owner);
         Validate.notNull(date);
         Validate.notNull(amount);
         Validate.notNull(receipts);
@@ -91,6 +104,7 @@ public class Deal implements Entity<Deal> {
         Validate.notNull(purchases);
 
         this.dealId = dealId;
+        this.owner = owner;
         this.date = date;
         this.amount = amount;
         this.description = description;
@@ -101,6 +115,10 @@ public class Deal implements Entity<Deal> {
         this.operations = new HashSet<>(operations);
         this.cardOperations = new HashSet<>(cardOperations);
         this.purchases = new ArrayList<>(purchases);
+    }
+
+    public PersonId owner() {
+        return owner;
     }
 
     public LocalDate date() {
@@ -211,6 +229,7 @@ public class Deal implements Entity<Deal> {
 
     public void join(Deal other) {
         Validate.notNull(other);
+        Validate.isTrue(owner.equals(other.owner));
 
         this.receipts.addAll(other.receipts);
         other.receipts.clear();

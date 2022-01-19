@@ -5,6 +5,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import ru.vzotov.banking.domain.model.BudgetCategoryId;
 import ru.vzotov.banking.domain.model.OperationId;
+import ru.vzotov.person.domain.model.PersonId;
 import ru.vzotov.cashreceipt.domain.model.ReceiptId;
 import ru.vzotov.domain.model.Money;
 import ru.vzotov.purchase.domain.model.PurchaseId;
@@ -18,10 +19,13 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @RunWith(JUnit4.class)
 public class DealTest {
 
+    private static final PersonId OWNER = new PersonId("user");
+
     @Test
     public void testConstruct() {
         Deal deal = new Deal(
                 new DealId("test deal"),
+                OWNER,
                 LocalDate.of(2021, 12, 14),
                 Money.kopecks(100),
                 "Deal description",
@@ -39,6 +43,7 @@ public class DealTest {
 
         assertThatThrownBy(() -> new Deal(
                 null,
+                OWNER,
                 LocalDate.now(), Money.kopecks(100),
                 "Deal description", "Deal comment", BudgetCategoryId.of("my category"),
                 Collections.emptySet(), Collections.emptySet(), Collections.emptySet(), Collections.emptyList()
@@ -61,6 +66,7 @@ public class DealTest {
 
         Deal target = new Deal(
                 new DealId("target-deal"),
+                OWNER,
                 LocalDate.of(2021, 12, 10),
                 Money.kopecks(100),
                 "Target deal description",
@@ -74,6 +80,7 @@ public class DealTest {
 
         Deal source = new Deal(
                 DealId.nextId(),
+                OWNER,
                 LocalDate.of(2021, 12, 14),
                 Money.kopecks(300),
                 "Source deal description",
