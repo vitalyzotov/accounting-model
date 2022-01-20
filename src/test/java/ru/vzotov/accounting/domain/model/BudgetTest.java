@@ -12,6 +12,7 @@ import ru.vzotov.calendar.domain.model.Recurrence;
 import ru.vzotov.calendar.domain.model.RecurrenceUnit;
 import ru.vzotov.calendar.domain.model.WorkCalendars;
 import ru.vzotov.domain.model.Money;
+import ru.vzotov.person.domain.model.PersonId;
 
 import javax.script.ScriptException;
 import java.time.LocalDate;
@@ -120,7 +121,7 @@ public class BudgetTest {
                 "test operation 1"
         ));
 
-        Budget budget = new Budget(BudgetId.nextId(), "default", rules);
+        Budget budget = new Budget(BudgetId.nextId(), PersonId.nextId(),"default", rules);
         List<BudgetBalance> result = budget.calculate(
                 WorkCalendars.CALENDAR_2020,
                 Collections.emptyList(),

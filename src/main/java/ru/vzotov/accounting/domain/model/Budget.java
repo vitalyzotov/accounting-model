@@ -7,6 +7,7 @@ import ru.vzotov.calendar.domain.model.WorkCalendar;
 import ru.vzotov.ddd.shared.AggregateRoot;
 import ru.vzotov.ddd.shared.Entity;
 import ru.vzotov.domain.model.Money;
+import ru.vzotov.person.domain.model.PersonId;
 
 import javax.script.ScriptException;
 import java.time.LocalDate;
@@ -27,7 +28,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * Бюджет
+ * Budget
  */
 @AggregateRoot
 public class Budget implements Entity<Budget> {
@@ -37,39 +38,49 @@ public class Budget implements Entity<Budget> {
     private static final Currency CURRENCY_DEFAULT = Currency.getInstance("RUR");
 
     /**
-     * Уникальный идентификатор
+     * Unique identifier
      */
     private BudgetId budgetId;
 
     /**
-     * Название
+     * Name of the budget
      */
     private String name;
 
     /**
-     * Правила формирования бюджета
+     * Budget rules
      */
     private Set<BudgetRule> rules = new HashSet<>();
 
     /**
-     * Локаль для определения первого дня недели
+     * Locale to detect first day of week and other location-specific things
      */
     private String locale;
 
+    /**
+     * Default currency
+     */
     private Currency currency;
 
-    public Budget(BudgetId budgetId, String name, Set<BudgetRule> rules) {
-        this(budgetId, name, rules, CURRENCY_DEFAULT, LOCALE_DEFAULT);
+    /**
+     * Owner of the budget
+     */
+    private PersonId owner;
+
+    public Budget(BudgetId budgetId, PersonId owner, String name, Set<BudgetRule> rules) {
+        this(budgetId, owner, name, rules, CURRENCY_DEFAULT, LOCALE_DEFAULT);
     }
 
-    public Budget(BudgetId budgetId, String name, Set<BudgetRule> rules, Currency currency, String locale) {
+    public Budget(BudgetId budgetId, PersonId owner, String name, Set<BudgetRule> rules, Currency currency, String locale) {
         Validate.notNull(budgetId);
+        Validate.notNull(owner);
         Validate.notEmpty(name);
         Validate.notNull(rules);
         Validate.notNull(currency);
         Validate.notNull(locale);
 
         this.budgetId = budgetId;
+        this.owner = owner;
         this.name = name;
         this.rules = new HashSet<>(rules);
         this.currency = currency;
@@ -78,6 +89,10 @@ public class Budget implements Entity<Budget> {
 
     public BudgetId budgetId() {
         return budgetId;
+    }
+
+    public PersonId owner() {
+        return owner;
     }
 
     public String name() {
@@ -133,15 +148,15 @@ public class Budget implements Entity<Budget> {
     }
 
     /**
-     * Производит расчет в заданном периоде времени согласно бюджетным правилам.
+     * Calculate budget within specified time range according to budget rules.
      *
-     * @param calendar       производственный календарь, охватывающий расчетный период
-     * @param actualRemains  известные остатки по счетам. Если остаток по счету неизвестен, то принимаем его равным нулю.
-     * @param defaultAccount номер счета, используемый по умолчанию когда правило не уточняет с какого счета поизводить списание или начисление
-     * @param start          первый день расчетного периода
-     * @param finish         последний день расчетного периода
-     * @return список итогов расчета с разбивкой по неделям
-     * @throws ScriptException при ошибках расчета
+     * @param calendar       work calendar for the time range
+     * @param actualRemains  known remains for accounts. If remain was not listed here, then it will be assumed that account remain is zero.
+     * @param defaultAccount default account number that will be used if budget rule doesn't contain any account number for deposit or withdraw
+     * @param start          first day of time range (inclusive)
+     * @param finish         last day of time range (inclusive)
+     * @return list of budget balance entries for each week of time range
+     * @throws ScriptException in case of calculation error
      */
     public List<BudgetBalance> calculate(
             WorkCalendar calendar,
@@ -150,7 +165,7 @@ public class Budget implements Entity<Budget> {
             LocalDate start,
             LocalDate finish,
             List<BankRecord<?>> operations) throws ScriptException {
-        Validate.isTrue(!calendar.from().isAfter(start) && !calendar.to().isBefore(finish), "Календарь должен охватывать расчетный период");
+        Validate.isTrue(!calendar.from().isAfter(start) && !calendar.to().isBefore(finish), "Calendar must include the calculated time range");
 
         final WeekFields weekFields = WeekFields.of(new Locale(this.locale));
         final List<BudgetBalance> result = new ArrayList<>();
@@ -167,26 +182,25 @@ public class Budget implements Entity<Budget> {
 
         for (LocalDate date = start; !date.isAfter(finish); date = date.plusWeeks(1)) {
 
-            // вычисляем границы текущего периода
+            // calculate time range of current period
             final LocalDate weekStart = date.isEqual(start) ? start : date.with(weekFields.dayOfWeek(), 1L);
             final LocalDate weekLastDay = date.with(weekFields.dayOfWeek(), 7L);
             final LocalDate weekEnd = weekLastDay.isAfter(finish) ? finish : weekLastDay;
 
-            // получаем остатки по счетам на текущий период
+            // calculate remains for current period
             knownRemains
                     .stream()
-                    .filter(remain -> !remain.date().isAfter(weekStart)) // берем остатки на дату, не позднее начала недели
-                    .forEach(remain -> currentRemains.merge(remain.account(), remain, (a, b) -> a.date().isAfter(b.date()) ? a : b)); // в currentRemains остается остаток с самой поздней датой
+                    .filter(remain -> !remain.date().isAfter(weekStart)) // use remains with date before end of period
+                    .forEach(remain -> currentRemains.merge(remain.account(), remain, (a, b) -> a.date().isAfter(b.date()) ? a : b)); // use most actual remains
 
-            // в currentRemains находятся остатки по счетам на начало периода
-            // сохраняем их в startRemains
+            // currentRemains contain remains for start of period
+            // put them into startRemains
             final Map<AccountNumber, Remain> startRemains = new HashMap<>(currentRemains);
 
-            // считаем правила
+            // calculate rules
             final Map<BudgetRule, Money> calculation = calculateRules(calendar, weekStart, weekEnd);
 
             final LocalDate itemDate = date;
-            // формируем итоги
             final List<BudgetPlan> items = calculation.entrySet().stream()
                     .map(entry -> {
                         final BudgetRule rule = entry.getKey();
@@ -202,7 +216,7 @@ public class Budget implements Entity<Budget> {
                         );
                     })
                     .peek(item -> {
-                        // вычисляем остатки на конец периода
+                        // calculate remains for end of period
                         final AccountNumber source = item.source() == null ? defaultAccount : item.source();
                         final AccountNumber target = item.target() == null ? defaultAccount : item.target();
                         Remain sourceRemain = currentRemains.get(source);
@@ -235,7 +249,7 @@ public class Budget implements Entity<Budget> {
                     })
                     .collect(Collectors.toList());
 
-            // считаем движение средств по счетам
+            // calculate flow of funds for all accounts
             final Map<AccountNumber, AccountMovement> movements = new HashMap<>();
             final Map<AccountNumber, List<BankRecord<?>>> weekOperations = knownOperations.stream()
                     .filter(op -> !(op.recorded().isAfter(weekEnd) || op.recorded().isBefore(weekStart)))
