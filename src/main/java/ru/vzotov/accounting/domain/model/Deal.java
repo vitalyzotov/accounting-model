@@ -3,6 +3,7 @@ package ru.vzotov.accounting.domain.model;
 import org.apache.commons.lang.Validate;
 import ru.vzotov.banking.domain.model.BudgetCategoryId;
 import ru.vzotov.banking.domain.model.OperationId;
+import ru.vzotov.person.domain.model.Owned;
 import ru.vzotov.person.domain.model.PersonId;
 import ru.vzotov.cashreceipt.domain.model.ReceiptId;
 import ru.vzotov.ddd.shared.AggregateRoot;
@@ -29,7 +30,7 @@ import static java.util.Collections.emptySet;
  * </p>
  */
 @AggregateRoot
-public class Deal implements Entity<Deal> {
+public class Deal implements Entity<Deal>, Owned {
 
     private DealId dealId;
 
