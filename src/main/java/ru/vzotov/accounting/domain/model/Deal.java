@@ -230,7 +230,9 @@ public class Deal implements Entity<Deal>, Owned {
 
     public void join(Deal other) {
         Validate.notNull(other);
-        Validate.isTrue(owner.equals(other.owner));
+
+        // This condition makes it impossible creation of transactions between family accounts.
+        // Validate.isTrue(owner.equals(other.owner));
 
         this.receipts.addAll(other.receipts);
         other.receipts.clear();
