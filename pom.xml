@@ -21,7 +21,7 @@
         <money.version>1.5</money.version>
         <gov.model.version>1.6</gov.model.version>
         <loan.model.version>1.2</loan.model.version>
-        <banking.model.version>1.55</banking.model.version>
+        <banking.model.version>1.57</banking.model.version>
         <calendar.model.version>1.55</calendar.model.version>
         <cashreceipt.model.version>1.55</cashreceipt.model.version>
         <purchases.model.version>1.4</purchases.model.version>
