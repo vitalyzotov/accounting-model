@@ -45,6 +45,7 @@ public class BudgetTest {
                 BudgetRuleType.INCOME,
                 null,
                 null,
+                null,
                 number,
                 recurrence,
                 "Заработная плата",
@@ -62,6 +63,7 @@ public class BudgetTest {
                 BudgetRuleType.INCOME,
                 null,
                 null,
+                null,
                 number,
                 recurrence,
                 "Аванс",
@@ -75,6 +77,7 @@ public class BudgetTest {
         rules.add(new BudgetRule(
                 BudgetRuleId.nextId(),
                 BudgetRuleType.EXPENSE,
+                null,
                 null,
                 number,
                 null,
@@ -92,6 +95,7 @@ public class BudgetTest {
                 null,
                 null,
                 null,
+                null,
                 recurrence,
                 "Покупка чего-то важного",
                 Money.rubles(2000.0d)
@@ -103,6 +107,7 @@ public class BudgetTest {
         rules.add(new BudgetRule(
                 BudgetRuleId.nextId(),
                 BudgetRuleType.EXPENSE,
+                null,
                 null,
                 null,
                 null,

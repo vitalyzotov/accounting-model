@@ -212,7 +212,8 @@ public class Budget implements Entity<Budget> {
                                 entry.getValue(),
                                 rule.sourceAccount(),
                                 rule.targetAccount(),
-                                rule.categoryId()
+                                rule.categoryId(),
+                                rule.purchaseCategoryId()
                         );
                     })
                     .peek(item -> {

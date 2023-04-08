@@ -5,6 +5,7 @@ import ru.vzotov.banking.domain.model.AccountNumber;
 import ru.vzotov.banking.domain.model.BudgetCategoryId;
 import ru.vzotov.calendar.domain.model.Recurrence;
 import ru.vzotov.calendar.domain.model.WorkCalendar;
+import ru.vzotov.cashreceipt.domain.model.PurchaseCategoryId;
 import ru.vzotov.ddd.shared.ValueObject;
 import ru.vzotov.domain.model.Money;
 
@@ -47,6 +48,11 @@ public class BudgetRule implements ValueObject<BudgetRule> {
     private BudgetCategoryId categoryId;
 
     /**
+     * Категория покупок
+     */
+    private PurchaseCategoryId purchaseCategoryId;
+
+    /**
      * Повторение
      */
     private Recurrence recurrence;
@@ -66,15 +72,24 @@ public class BudgetRule implements ValueObject<BudgetRule> {
      */
     private boolean enabled;
 
-    public BudgetRule(BudgetRuleId ruleId, BudgetRuleType type, BudgetCategoryId categoryId, AccountNumber sourceAccount, AccountNumber targetAccount, Recurrence recurrence, String name, Money value) {
-        this(ruleId, type, categoryId, sourceAccount, targetAccount, recurrence, name, value, null);
+    public BudgetRule(BudgetRuleId ruleId, BudgetRuleType type,
+                      BudgetCategoryId categoryId, PurchaseCategoryId purchaseCategoryId,
+                      AccountNumber sourceAccount, AccountNumber targetAccount, Recurrence recurrence,
+                      String name, Money value) {
+        this(ruleId, type, categoryId, purchaseCategoryId, sourceAccount, targetAccount, recurrence, name, value, null);
     }
 
-    public BudgetRule(BudgetRuleId ruleId, BudgetRuleType type, BudgetCategoryId categoryId, AccountNumber sourceAccount, AccountNumber targetAccount, Recurrence recurrence, String name, Money value, Calculation calculation) {
-        this(ruleId, type, categoryId, sourceAccount, targetAccount, recurrence, name, value, calculation, true);
+    public BudgetRule(BudgetRuleId ruleId, BudgetRuleType type,
+                      BudgetCategoryId categoryId, PurchaseCategoryId purchaseCategoryId,
+                      AccountNumber sourceAccount, AccountNumber targetAccount, Recurrence recurrence,
+                      String name, Money value, Calculation calculation) {
+        this(ruleId, type, categoryId, purchaseCategoryId, sourceAccount, targetAccount, recurrence, name, value, calculation, true);
     }
 
-    public BudgetRule(BudgetRuleId ruleId, BudgetRuleType type, BudgetCategoryId categoryId, AccountNumber sourceAccount, AccountNumber targetAccount, Recurrence recurrence, String name, Money value, Calculation calculation, boolean enabled) {
+    public BudgetRule(BudgetRuleId ruleId, BudgetRuleType type,
+                      BudgetCategoryId categoryId, PurchaseCategoryId purchaseCategoryId,
+                      AccountNumber sourceAccount, AccountNumber targetAccount, Recurrence recurrence,
+                      String name, Money value, Calculation calculation, boolean enabled) {
         Validate.notNull(ruleId);
         Validate.notNull(type);
         Validate.notNull(name);
@@ -83,6 +98,7 @@ public class BudgetRule implements ValueObject<BudgetRule> {
         this.ruleId = ruleId;
         this.type = type;
         this.categoryId = categoryId;
+        this.purchaseCategoryId = purchaseCategoryId;
         this.sourceAccount = sourceAccount;
         this.targetAccount = targetAccount;
         this.name = name;
@@ -106,6 +122,10 @@ public class BudgetRule implements ValueObject<BudgetRule> {
 
     public BudgetCategoryId categoryId() {
         return categoryId;
+    }
+
+    public PurchaseCategoryId purchaseCategoryId() {
+        return purchaseCategoryId;
     }
 
     public AccountNumber sourceAccount() {
@@ -143,6 +163,7 @@ public class BudgetRule implements ValueObject<BudgetRule> {
                 Objects.equals(type, rule.type) &&
                 Objects.equals(name, rule.name) &&
                 Objects.equals(categoryId, rule.categoryId) &&
+                Objects.equals(purchaseCategoryId, rule.purchaseCategoryId) &&
                 Objects.equals(sourceAccount, rule.sourceAccount) &&
                 Objects.equals(targetAccount, rule.targetAccount) &&
                 Objects.equals(recurrence, rule.recurrence) &&
@@ -160,7 +181,7 @@ public class BudgetRule implements ValueObject<BudgetRule> {
 
     @Override
     public int hashCode() {
-        return Objects.hash(ruleId, type, name, categoryId, sourceAccount, targetAccount, recurrence, value, calculation);
+        return Objects.hash(ruleId, type, name, categoryId, purchaseCategoryId, sourceAccount, targetAccount, recurrence, value, calculation);
     }
 
     @Override
@@ -171,6 +192,7 @@ public class BudgetRule implements ValueObject<BudgetRule> {
                 ", source=" + sourceAccount +
                 ", target=" + targetAccount +
                 ", categoryId=" + categoryId +
+                ", purchaseCategoryId=" + purchaseCategoryId +
                 ", recurrence=" + recurrence +
                 ", value=" + value +
                 ", calculation=" + calculation +

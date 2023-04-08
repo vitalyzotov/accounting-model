@@ -3,6 +3,7 @@ package ru.vzotov.accounting.domain.model;
 import org.apache.commons.lang.Validate;
 import ru.vzotov.banking.domain.model.AccountNumber;
 import ru.vzotov.banking.domain.model.BudgetCategoryId;
+import ru.vzotov.cashreceipt.domain.model.PurchaseCategoryId;
 import ru.vzotov.ddd.shared.AggregateRoot;
 import ru.vzotov.ddd.shared.Entity;
 import ru.vzotov.domain.model.Money;
@@ -27,25 +28,29 @@ public class BudgetPlan implements Entity<BudgetPlan> {
 
     private BudgetCategoryId category;
 
+    private PurchaseCategoryId purchaseCategory;
+
     private Money value;
 
     private BudgetRule rule;
 
     private LocalDate date;
 
+    /*
     public BudgetPlan(BudgetPlanId itemId, BudgetRule rule, LocalDate date, BudgetDirection direction, Money value) {
         this(itemId, rule, date, direction, value, null, null);
     }
 
-    public BudgetPlan(BudgetPlanId itemId, BudgetRule rule, LocalDate date, BudgetDirection direction, Money value, BudgetCategoryId category) {
-        this(itemId, rule, date, direction, value, null, null, category);
+    public BudgetPlan(BudgetPlanId itemId, BudgetRule rule, LocalDate date, BudgetDirection direction, Money value, BudgetCategoryId category, PurchaseCategoryId purchaseCategory) {
+        this(itemId, rule, date, direction, value, null, null, category, purchaseCategory);
     }
 
     public BudgetPlan(BudgetPlanId itemId, BudgetRule rule, LocalDate date, BudgetDirection direction, Money value, AccountNumber source, AccountNumber target) {
-        this(itemId, rule, date, direction, value, source, target, null);
+        this(itemId, rule, date, direction, value, source, target, null, null);
     }
+     */
 
-    public BudgetPlan(BudgetPlanId itemId, BudgetRule rule, LocalDate date, BudgetDirection direction, Money value, AccountNumber source, AccountNumber target, BudgetCategoryId category) {
+    public BudgetPlan(BudgetPlanId itemId, BudgetRule rule, LocalDate date, BudgetDirection direction, Money value, AccountNumber source, AccountNumber target, BudgetCategoryId category, PurchaseCategoryId purchaseCategory) {
         Validate.notNull(itemId);
         Validate.notNull(rule);
         Validate.notNull(direction);
@@ -57,13 +62,15 @@ public class BudgetPlan implements Entity<BudgetPlan> {
         this.source = source;
         this.target = target;
         this.category = category;
+        this.purchaseCategory = purchaseCategory;
         this.direction = direction;
         this.value = value;
     }
 
     public BudgetPlan withData(BudgetRule rule, LocalDate date, BudgetDirection direction, Money value,
-                               AccountNumber source, AccountNumber target, BudgetCategoryId category) {
-        BudgetPlan result = new BudgetPlan(itemId, rule, date, direction, value, source, target, category);
+                               AccountNumber source, AccountNumber target,
+                               BudgetCategoryId category, PurchaseCategoryId purchaseCategory) {
+        BudgetPlan result = new BudgetPlan(itemId, rule, date, direction, value, source, target, category, purchaseCategory);
         result.id = id;
         return result;
     }
@@ -90,6 +97,10 @@ public class BudgetPlan implements Entity<BudgetPlan> {
 
     public BudgetCategoryId category() {
         return category;
+    }
+
+    public PurchaseCategoryId purchaseCategory() {
+        return purchaseCategory;
     }
 
     public BudgetDirection direction() {
