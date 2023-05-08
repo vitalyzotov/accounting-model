@@ -21,10 +21,10 @@
         <money.version>1.6</money.version>
         <gov.model.version>1.6</gov.model.version>
         <loan.model.version>1.3</loan.model.version>
-        <banking.model.version>1.58</banking.model.version>
+        <banking.model.version>1.59</banking.model.version>
         <calendar.model.version>1.56</calendar.model.version>
-        <cashreceipt.model.version>1.56</cashreceipt.model.version>
-        <purchases.model.version>1.5</purchases.model.version>
+        <cashreceipt.model.version>1.57</cashreceipt.model.version>
+        <purchases.model.version>1.6</purchases.model.version>
     </properties>
 
     <dependencies>
