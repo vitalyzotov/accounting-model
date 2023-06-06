@@ -5,7 +5,7 @@ import ru.vzotov.ddd.shared.ValueObject;
 public enum BudgetDirection implements ValueObject<BudgetDirection> {
     INCOME('+'), EXPENSE('-'), MOVE('M');
 
-    private char symbol;
+    private final char symbol;
 
     BudgetDirection(char symbol) {
         this.symbol = symbol;

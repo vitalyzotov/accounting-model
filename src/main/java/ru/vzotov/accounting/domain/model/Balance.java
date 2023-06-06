@@ -1,6 +1,6 @@
 package ru.vzotov.accounting.domain.model;
 
-import org.apache.commons.lang.Validate;
+import org.apache.commons.lang3.Validate;
 import ru.vzotov.banking.domain.model.Operation;
 import ru.vzotov.ddd.shared.ValueObject;
 import ru.vzotov.domain.model.Money;
@@ -59,18 +59,11 @@ public class Balance implements ValueObject<Balance> {
             }
             Money v = op.amount();
             Validate.isTrue(v.currency().equals(result.currency()));
-            switch (op.type()) {
-                case DEPOSIT:
-                    result = result.add(v);
-                    break;
-
-                case WITHDRAW:
-                    result = result.subtract(v);
-                    break;
-
-                default:
-                    throw new IllegalArgumentException("Unknown operation type");
-            }
+            result = switch (op.type()) {
+                case DEPOSIT -> result.add(v);
+                case WITHDRAW -> result.subtract(v);
+                default -> throw new IllegalArgumentException("Unknown operation type");
+            };
         }
         return result;
     }

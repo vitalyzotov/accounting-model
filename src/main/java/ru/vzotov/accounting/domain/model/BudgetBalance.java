@@ -1,6 +1,6 @@
 package ru.vzotov.accounting.domain.model;
 
-import org.apache.commons.lang.Validate;
+import org.apache.commons.lang3.Validate;
 import ru.vzotov.ddd.shared.ValueObject;
 import ru.vzotov.domain.model.Money;
 

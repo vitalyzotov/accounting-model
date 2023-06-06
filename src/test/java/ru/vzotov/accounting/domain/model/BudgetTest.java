@@ -1,8 +1,6 @@
 package ru.vzotov.accounting.domain.model;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.jupiter.api.Test;
 import ru.vzotov.banking.domain.model.AccountNumber;
 import ru.vzotov.banking.domain.model.BankRecord;
 import ru.vzotov.banking.domain.model.Operation;
@@ -25,7 +23,6 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(JUnit4.class)
 public class BudgetTest {
 
     @Test
