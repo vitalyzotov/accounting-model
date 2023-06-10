@@ -1,14 +1,14 @@
 package ru.vzotov.accounting.domain.model;
 
-import org.apache.commons.lang.Validate;
+import org.apache.commons.lang3.Validate;
 import ru.vzotov.banking.domain.model.BudgetCategoryId;
 import ru.vzotov.banking.domain.model.OperationId;
-import ru.vzotov.person.domain.model.Owned;
-import ru.vzotov.person.domain.model.PersonId;
 import ru.vzotov.cashreceipt.domain.model.ReceiptId;
 import ru.vzotov.ddd.shared.AggregateRoot;
 import ru.vzotov.ddd.shared.Entity;
 import ru.vzotov.domain.model.Money;
+import ru.vzotov.person.domain.model.Owned;
+import ru.vzotov.person.domain.model.PersonId;
 import ru.vzotov.purchase.domain.model.PurchaseId;
 
 import java.time.LocalDate;

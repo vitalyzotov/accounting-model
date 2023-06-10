@@ -1,6 +1,6 @@
 package ru.vzotov.accounting.domain.model;
 
-import org.apache.commons.lang.Validate;
+import org.apache.commons.lang3.Validate;
 import ru.vzotov.banking.domain.model.AccountNumber;
 import ru.vzotov.banking.domain.model.BankRecord;
 import ru.vzotov.calendar.domain.model.WorkCalendar;
@@ -172,11 +172,11 @@ public class Budget implements Entity<Budget> {
         final List<Remain> knownRemains = actualRemains.stream()
                 .filter(remain -> !remain.date().isAfter(finish))
                 .sorted(Comparator.comparing(Remain::date).reversed())
-                .collect(Collectors.toList());
+                .toList();
 
         final List<BankRecord<?>> knownOperations = operations.stream()
                 .filter(op -> !(op.recorded().isAfter(finish) || op.recorded().isBefore(start)))
-                .collect(Collectors.toList());
+                .toList();
 
         final Map<AccountNumber, Remain> currentRemains = new HashMap<>();
 
@@ -229,23 +229,21 @@ public class Budget implements Entity<Budget> {
                             targetRemain = new Remain(target, weekEnd, Money.ofRaw(0, item.value().currency()));
                         }
                         switch (item.direction()) {
-                            case INCOME:
+                            case INCOME -> {
                                 targetRemain = new Remain(target, weekEnd, targetRemain.value().add(item.value()));
                                 currentRemains.put(target, targetRemain);
-                                break;
-                            case EXPENSE:
+                            }
+                            case EXPENSE -> {
                                 sourceRemain = new Remain(source, weekEnd, sourceRemain.value().subtract(item.value()));
                                 currentRemains.put(source, sourceRemain);
-                                break;
-                            case MOVE:
+                            }
+                            case MOVE -> {
                                 sourceRemain = new Remain(source, weekEnd, sourceRemain.value().subtract(item.value()));
                                 currentRemains.put(source, sourceRemain);
-
                                 targetRemain = new Remain(target, weekEnd, targetRemain.value().add(item.value()));
                                 currentRemains.put(target, targetRemain);
-                                break;
-                            default:
-                                throw new IllegalArgumentException();
+                            }
+                            default -> throw new IllegalArgumentException();
                         }
                     })
                     .collect(Collectors.toList());
@@ -262,16 +260,12 @@ public class Budget implements Entity<Budget> {
                 final Remain startRemain = startRemains.computeIfAbsent(k, n -> new Remain(n, weekStart, Money.kopecks(0L)));
                 Money finishRemainValue = startRemain.value();
                 for (BankRecord<?> op : v) {
-                    switch (op.type()) {
-                        case DEPOSIT:
-                            finishRemainValue = finishRemainValue.add(op.amount());
-                            break;
-                        case WITHDRAW:
-                            finishRemainValue = finishRemainValue.subtract(op.amount());
-                            break;
-                        default:
-                            throw new IllegalArgumentException();
-                    }
+                    finishRemainValue = switch (op.type()) {
+                        case DEPOSIT -> finishRemainValue.add(op.amount());
+                        case WITHDRAW -> finishRemainValue.subtract(op.amount());
+                        //noinspection UnnecessaryDefault
+                        default -> throw new IllegalArgumentException();
+                    };
                 }
                 final Remain finishRemain = new Remain(k, weekEnd, finishRemainValue);
                 AccountMovement movement = new AccountMovement(startRemain, finishRemain, v);

@@ -5,7 +5,7 @@ import ru.vzotov.ddd.shared.ValueObject;
 public enum BudgetRuleType implements ValueObject<BudgetRuleType> {
     INCOME('+'), EXPENSE('-'), MOVE('M');
 
-    private char symbol;
+    private final char symbol;
 
     BudgetRuleType(char symbol) {
         this.symbol = symbol;

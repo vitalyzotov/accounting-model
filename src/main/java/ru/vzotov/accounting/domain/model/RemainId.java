@@ -19,7 +19,7 @@ import static java.time.temporal.ChronoField.YEAR;
  */
 public class RemainId implements ValueObject<RemainId> {
 
-    private static DateTimeFormatter ID_DATE_FORMAT = new DateTimeFormatterBuilder()
+    private static final DateTimeFormatter ID_DATE_FORMAT = new DateTimeFormatterBuilder()
             .parseCaseInsensitive()
             .appendValue(YEAR, 4)
             .appendValue(MONTH_OF_YEAR, 2)
@@ -60,7 +60,7 @@ public class RemainId implements ValueObject<RemainId> {
 
     @Override
     public String toString() {
-        return value.toString();
+        return value;
     }
 
     protected RemainId() {
