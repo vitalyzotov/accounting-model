@@ -23,7 +23,7 @@
         <compiler.dir>${project.build.directory}/compiler</compiler.dir>
 
         <!-- Own modules -->
-        <ddd.version>2.0</ddd.version>
+        <ddd.version>1.4</ddd.version>
         <money.version>2.0</money.version>
         <gov.model.version>2.0</gov.model.version>
         <loan.model.version>2.0</loan.model.version>
