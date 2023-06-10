@@ -17,17 +17,17 @@ public class Balance implements ValueObject<Balance> {
     /**
      * Остаток по счету, от которого проводим расчет баланса
      */
-    private Remain remain;
+    private final Remain remain;
 
     /**
      * Значение баланса
      */
-    private Money value;
+    private final Money value;
 
     /**
      * Операции, учитываемые при расчете баланса
      */
-    private Collection<Operation> operations;
+    private final Collection<Operation> operations;
 
     public Balance(Remain remain, Collection<Operation> operations) {
         Validate.notNull(remain);
@@ -62,6 +62,7 @@ public class Balance implements ValueObject<Balance> {
             result = switch (op.type()) {
                 case DEPOSIT -> result.add(v);
                 case WITHDRAW -> result.subtract(v);
+                //noinspection UnnecessaryDefault
                 default -> throw new IllegalArgumentException("Unknown operation type");
             };
         }

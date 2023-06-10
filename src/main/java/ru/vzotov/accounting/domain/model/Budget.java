@@ -263,6 +263,7 @@ public class Budget implements Entity<Budget> {
                     finishRemainValue = switch (op.type()) {
                         case DEPOSIT -> finishRemainValue.add(op.amount());
                         case WITHDRAW -> finishRemainValue.subtract(op.amount());
+                        //noinspection UnnecessaryDefault
                         default -> throw new IllegalArgumentException();
                     };
                 }

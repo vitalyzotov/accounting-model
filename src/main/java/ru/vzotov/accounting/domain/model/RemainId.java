@@ -60,7 +60,7 @@ public class RemainId implements ValueObject<RemainId> {
 
     @Override
     public String toString() {
-        return value.toString();
+        return value;
     }
 
     protected RemainId() {
